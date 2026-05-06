@@ -32,6 +32,10 @@ Currently this library supports IFC2x2, IFC2x3, IFC4 Addendum 2 TC1 and IFC4.3 A
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="..\xbim-toolkit-icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xbim.Geometry.Occt" Version="7.8.1" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xbim.Geometry.Abstractions\Xbim.Geometry.Abstractions.csproj" />
     <ProjectReference Include="..\Xbim.Geometry.Engine.Interop\Xbim.Geometry.Engine.Interop.csproj" />

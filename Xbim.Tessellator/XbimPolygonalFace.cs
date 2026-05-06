@@ -335,7 +335,26 @@ namespace Xbim.Tessellator
             {
                 foreach (int idx in coordIndex)
                 {
-                    var pnt = coordinates.CoordList[(int)(idx-1)];
+                    // In der IFC Spezifikation sind die Indizes 1-basiert, aber in C# sind sie 0-basiert.
+                    int arrayIndex = (int)idx - 1;
+
+                    if (arrayIndex < 0)
+                    {
+                        throw new IndexOutOfRangeException($"Index {idx} is out of range for coordinates list.");
+                    }
+
+                    if (arrayIndex >= coordinates.CoordList.Count)
+                    {
+                        break;
+                    }
+
+                    var pnt = coordinates.CoordList[arrayIndex];
+
+                    if (pnt.Count != 3)
+                    {
+                        continue;
+                    }
+
                     points.Add(new XbimCartesianPoint3D(pnt[0], pnt[1], pnt[2]));
                 }
             }

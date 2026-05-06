@@ -17,6 +17,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+	  <PackageReference Include="Xbim.Geometry.Occt" Version="7.8.1" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Xbim.Geometry.Engine.Interop\Xbim.Geometry.Engine.Interop.csproj" />

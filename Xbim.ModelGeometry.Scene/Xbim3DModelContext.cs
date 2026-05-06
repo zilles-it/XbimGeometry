@@ -219,6 +219,8 @@ namespace Xbim.ModelGeometry.Scene
             internal bool GenerateFullGeometry { get; private set; }
             internal Dictionary<int, int> SurfaceStyles { get; private set; }
 
+            internal HashSet<int> RelevanteProductIds { get; set; }
+
             internal Dictionary<IIfcRepresentationContext, ConcurrentQueue<XbimBBoxClusterElement>> Clusters
             {
                 get;
@@ -437,6 +439,14 @@ namespace Xbim.ModelGeometry.Scene
                             var t = item.Representation; // on invalid schema files, this throws an exception.
                             if (item != null)
                             {
+                                if (this.RelevanteProductIds != null)
+                                {
+                                    if (!this.RelevanteProductIds.Contains(item.EntityLabel))
+                                    {
+                                        continue;
+                                    }
+                                }
+
                                 products.Add(item);
                             }
                         }
@@ -472,7 +482,7 @@ namespace Xbim.ModelGeometry.Scene
                             continue;
 
                         // Write product representations of context
-                        foreach (var rep in product.Representation.Representations.Where(r => _modelContext.IsInContext(Contexts, r) && 
+                        foreach (var rep in product.Representation.Representations.Where(r => _modelContext.IsInContext(Contexts, r) &&
                             r.IsBodyRepresentation(_modelContext.BodyRepresentations)))
                         {
                             foreach (var shape in rep.Items.Where(i => !(i is IIfcGeometricSet)))
@@ -537,7 +547,7 @@ namespace Xbim.ModelGeometry.Scene
         private readonly XGeometryEngineVersion engineVersion;
         private readonly IModel _model;
         private readonly DynamicDeflection _dynamicDeflection;
-        
+
         private IXbimGeometryEngine Engine => _engine;
 
         /// <summary>
@@ -573,7 +583,7 @@ namespace Xbim.ModelGeometry.Scene
             : this(model, contextType, requiredContextIdentifier, loggerFactory.CreateLogger<Xbim3DModelContext>(), engineVersion, loggerFactory)
         {
         }
-        
+
         //The maximum extent for any dimension of any products bouding box 
         //private double _maxXyz;
 
@@ -602,9 +612,9 @@ namespace Xbim.ModelGeometry.Scene
             _logger = logger ?? (loggerFactory.CreateLogger<XbimGeometryEngine>());
             this.engineVersion = engineVersion;
             _engine = factory.CreateGeometryEngine(engineVersion, model, loggerFactory);
-            
+
             _dynamicDeflection = new DynamicDeflection(model.ModelFactors, _engine, _logger);
-            
+
             if (engineVersion == XGeometryEngineVersion.V6)
                 _modelServices = ((IXGeometryEngineV6)_engine).ModelGeometryService;
             else
@@ -779,11 +789,12 @@ namespace Xbim.ModelGeometry.Scene
                 }
                 using (var contextHelper = new XbimCreateContextHelper(this, _model, _contexts, _logger))
                 {
+                    contextHelper.RelevanteProductIds = this.RelevanteProductIds;
+
                     contextHelper.CustomMeshBehaviour = CustomMeshingBehaviour;
                     _logger.LogTrace("Starting Initialise sequence");
                     progDelegate?.Invoke(-1, "Initialise");
                     // Creation of full BREP representation is an optional V6 only feature
-                    
 
                     var createFullGeometry = engineVersion == XGeometryEngineVersion.V6 && generateBREPs == true;
                     if (!contextHelper.Initialise(adjustWcs, _engine, createFullGeometry))
@@ -1431,12 +1442,17 @@ namespace Xbim.ModelGeometry.Scene
         /// </summary>
         public int MaxThreads { get; set; }
 
+        /// <summary>
+        /// HashSet mit relevanten Product-Ids.
+        /// Alle anderen Products sollen ignoriert werden.
+        /// </summary>
+        public HashSet<int> RelevanteProductIds { get; set; }
 
         private void WriteShapeGeometries(XbimCreateContextHelper contextHelper,
             ReportProgressDelegate progDelegate,
             IGeometryStoreInitialiser geometryStore,
             XbimGeometryType geomStorageType,
-            Func<XbimTriangulatedMesh, int, 
+            Func<XbimTriangulatedMesh, int,
             XbimTriangulatedMesh> postTessellationCallback = null,
             DynamicDeflectionSettings dynamicDeflectionSettings = null)
         {
@@ -1562,7 +1578,7 @@ namespace Xbim.ModelGeometry.Scene
 
                                 (deflection, deflectionAngle) = (def.Linear, def.Angular);
                             }
-                            
+
                             shapeGeom = Engine.CreateShapeGeometry(geomModel, precision, deflection, deflectionAngle, geomStorageType, _logger);
                             if (shapeMetaData.IsFeatureElementShape)
                             {
