@@ -345,7 +345,12 @@ namespace Xbim
 			//catch ()
 			catch (...)
 			{
-				throw gcnew System::Exception(System::String::Format("General Error Creating {0}, #{1}", geomRep->GetType()->Name, geomRep->EntityLabel));
+				// Keinen Fehler werfen ! Ansonsten kann das gesamte BV nich importiert werden.
+				// Das tritt immer wieder bei DFH-Haus auf.
+				LogError(_logger, geomRep, "General Error Creating");
+				return gcnew XbimGeometryObjectSet(_modelService);
+
+				// throw gcnew System::Exception(System::String::Format("General Error Creating {0}, #{1}", geomRep->GetType()->Name, geomRep->EntityLabel));
 			}
 			LogError(_logger, geomRep, "Geometry Representation of Type {ifcType} is not implemented", geomRep->GetType()->Name);
 			return gcnew XbimGeometryObjectSet(_modelService);
