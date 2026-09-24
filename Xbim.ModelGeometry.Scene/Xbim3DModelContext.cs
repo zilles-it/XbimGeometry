@@ -435,7 +435,8 @@ namespace Xbim.ModelGeometry.Scene
                         try
                         {
                             var t = item.Representation; // on invalid schema files, this throws an exception.
-                            if (item != null)
+                            if (item != null
+                                && (_modelContext.RelevanteProductIds == null || _modelContext.RelevanteProductIds.Contains(item.EntityLabel)))
                             {
                                 products.Add(item);
                             }
@@ -810,6 +811,7 @@ namespace Xbim.ModelGeometry.Scene
                         .Where(p =>
                             p.Representation != null
                             && !processed.Contains(p.EntityLabel)
+                            && (RelevanteProductIds == null || RelevanteProductIds.Contains(p.EntityLabel))
                         ).ToList();
 
 
@@ -1430,6 +1432,11 @@ namespace Xbim.ModelGeometry.Scene
         /// Defines the maximum number of threads to use in parallel operations  any value less then 1 is not used..
         /// </summary>
         public int MaxThreads { get; set; }
+
+        /// <summary>
+        /// Wenn gesetzt, werden nur diese Produkt-EntityLabels vermesht. Null lässt alle Produkte zu.
+        /// </summary>
+        public HashSet<int> RelevanteProductIds { get; set; }
 
 
         private void WriteShapeGeometries(XbimCreateContextHelper contextHelper,

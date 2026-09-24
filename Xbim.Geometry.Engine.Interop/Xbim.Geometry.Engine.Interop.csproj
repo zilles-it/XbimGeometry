@@ -21,10 +21,10 @@
 
 	<Target Name="GetGeometryEngineFiles">
 		<ItemGroup>
-			<GeomEngine64 Condition="'$(Platform)' == 'x64' Or '$(Platform)' == 'AnyCPU'" Include="$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.dll">
+			<GeomEngine64 Condition="('$(Platform)' == 'x64' Or '$(Platform)' == 'AnyCPU') And Exists('$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.dll')" Include="$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.dll">
 				<WinPlatform>lib/$(TargetFramework)/win-x64</WinPlatform>
 			</GeomEngine64>
-			<GeomEngine86 Condition="'$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'" Include="$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.dll">
+			<GeomEngine86 Condition="('$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU') And Exists('$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.dll')" Include="$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.dll">
 				<WinPlatform>lib/$(TargetFramework)/win-x86</WinPlatform>
 			</GeomEngine86>
 
@@ -77,19 +77,19 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>win-x86\%(Filename)%(Extension)</Link>
 		</None>
-		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.dll" Visible="true" Condition="'$(Platform)' == 'x64' Or '$(Platform)' == 'AnyCPU'">
+		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.dll" Visible="true" Condition="('$(Platform)' == 'x64' Or '$(Platform)' == 'AnyCPU') And Exists('$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.dll')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>win-x64\%(Filename)%(Extension)</Link>
 		</None>
-		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.dll" Visible="true" Condition="'$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
+		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.dll" Visible="true" Condition="('$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU') And Exists('$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.dll')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>win-x86\%(Filename)%(Extension)</Link>
 		</None>
-		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.pdb" Visible="true" Condition="'$(Platform)' == 'x64' Or '$(Platform)' == 'AnyCPU'">
+		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.pdb" Visible="true" Condition="('$(Platform)' == 'x64' Or '$(Platform)' == 'AnyCPU') And Exists('$(GeometryEnginePath)$(TargetFramework)\win-x64\Xbim.Geometry.Engine.pdb')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>win-x64\%(Filename)%(Extension)</Link>
 		</None>
-		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.pdb" Visible="true" Condition="'$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
+		<None Include="$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.pdb" Visible="true" Condition="('$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU') And Exists('$(GeometryEnginePath)$(TargetFramework)\win-x86\Xbim.Geometry.Engine.pdb')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>win-x86\%(Filename)%(Extension)</Link>
 		</None>
